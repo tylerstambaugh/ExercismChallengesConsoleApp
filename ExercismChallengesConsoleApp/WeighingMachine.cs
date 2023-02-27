@@ -12,8 +12,8 @@ namespace ExercismChallengesConsoleApp
         public int Precision { get; }
 
         // TODO: define the 'Weight' property
-        private int weight;
-        public int Weight
+        private double weight;
+        public double Weight
         {
             get { return weight; }
             set
@@ -30,14 +30,15 @@ namespace ExercismChallengesConsoleApp
         }
 
         // TODO: define the 'DisplayWeight' property
-        private double displayWeight;
-        public double DisplayWeight
+        private string displayWeight;
+        public string DisplayWeight
         {
-            get { return Weight - TareAdjustment; }
+            get { return $"{Math.Round((Weight - TareAdjustment), Precision).ToString()} kg"; }
         }
 
         // TODO: define the 'TareAdjustment' property
-        public int TareAdjustment { get; set; } = 5;
+        public double TareAdjustment { get; set; } = 5.0;
     }
+
 
 }
