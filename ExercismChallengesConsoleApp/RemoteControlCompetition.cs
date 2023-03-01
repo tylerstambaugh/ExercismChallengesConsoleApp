@@ -9,10 +9,19 @@ public interface IRemoteControlCar
 }
 
 
-public class ProductionRemoteControlCar : IRemoteControlCar
+public class ProductionRemoteControlCar : IRemoteControlCar, IComparable<ProductionRemoteControlCar>
 {
     public int DistanceTravelled { get; private set; }
     public int NumberOfVictories { get; set; }
+
+    public int CompareTo(ProductionRemoteControlCar? other)
+    {
+        if (this.NumberOfVictories > other.NumberOfVictories)
+            return 1;
+        else if (this.NumberOfVictories < other.NumberOfVictories)
+            return -1;
+        else return 0;
+    }
 
     public void Drive()
     {
@@ -30,16 +39,22 @@ public class ExperimentalRemoteControlCar : IRemoteControlCar
     }
 }
 
-public static class TestTrack : IRemoteControlCar, IComparable<IRemoteControlCar>
+public static class TestTrack
 {
     public static void Race(IRemoteControlCar car)
     {
-        throw new NotImplementedException($"Please implement the (static) TestTrack.Race() method");
+        car.Drive();
     }
 
     public static List<ProductionRemoteControlCar> GetRankedCars(ProductionRemoteControlCar prc1,
         ProductionRemoteControlCar prc2)
     {
-        throw new NotImplementedException($"Please implement the (static) TestTrack.GetRankedCars() method");
+       List<ProductionRemoteControlCar> returnList = new List<ProductionRemoteControlCar>();
+        returnList.Add(prc1);
+        returnList.Add(prc2);
+        returnList.Sort();
+
+        return returnList;
+
     }
 }
