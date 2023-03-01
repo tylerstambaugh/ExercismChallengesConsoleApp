@@ -33,11 +33,16 @@ namespace ExercismChallengesConsoleApp
         private string displayWeight;
         public string DisplayWeight
         {
-            get { return $"{Math.Round((Weight - TareAdjustment), Precision).ToString()} kg"; }
+            
+            get 
+            {
+                string stringWeight = (Weight - TareAdjustment).ToString();
+                return $"{stringWeight.Substring(0, stringWeight.IndexOf('.') + Precision + 1)} kg";             
+            }
         }
 
         // TODO: define the 'TareAdjustment' property
-        public double TareAdjustment { get; set; } = 5.0;
+        public double TareAdjustment { get; set; } = 5.000;
     }
 
 
