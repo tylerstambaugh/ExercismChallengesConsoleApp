@@ -1,12 +1,14 @@
 ﻿//https://exercism.org/tracks/csharp/exercises/building-telemetry/edit
 
 using System;
+using System.Runtime.CompilerServices;
+using System.Runtime.Serialization;
 
 public class RemoteControlCar
 {
     private int batteryPercentage = 100;
     private int distanceDrivenInMeters = 0;
-    private string[] _sponsors = new string[0];
+    private string[] sponsors = new string[0];
     private int latestSerialNum = 0;
 
     public void Drive()
@@ -20,24 +22,37 @@ public class RemoteControlCar
 
     public void SetSponsors(params string[] sponsors)
     {
-        _sponsors = sponsors;
+        this.sponsors = sponsors;
 
     }
 
     public string DisplaySponsor(int sponsorNum)
     {
-        return _sponsors[sponsorNum];
+        return this.sponsors[sponsorNum];
     }
 
     public bool GetTelemetryData(ref int serialNum,
         out int batteryPercentage, out int distanceDrivenInMeters)
     {
-        throw new NotImplementedException("Please implement the RemoteControlCar.GetTelemetryData() method");
+        if (serialNum > latestSerialNum)
+        {
+            serialNum = latestSerialNum;
+            batteryPercentage = -1;
+            distanceDrivenInMeters = -1;
+            
+            return false;
+        }
+        else
+        {            
+            batteryPercentage = this.batteryPercentage;
+            distanceDrivenInMeters = this.distanceDrivenInMeters;
+            return true;
+        }
     }
 
     public static RemoteControlCar Buy()
     {
-        return new RemoteControlCar();
+        return new RemoteControlCar();        
     }
 }
 
@@ -52,6 +67,8 @@ public class TelemetryClient
 
     public string GetBatteryUsagePerMeter(int serialNum)
     {
-        throw new NotImplementedException("Please implement the TelemetryClient.GetBatteryUsagePerMeter() method");
+        return car.GetTelemetryData(ref serialNum, out int batteryPercentage, out int distanceDrivenInMeters) ?
+            $"usage-per-meter={(100 - batteryPercentage) / distanceDrivenInMeters}"
+            : "no data";        
     }
 }
