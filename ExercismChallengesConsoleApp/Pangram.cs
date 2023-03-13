@@ -16,7 +16,8 @@ public static class Pangram
 
         for (int i = 0; i < lowerCaseInput.Length; i++)
         {
-            chars[lowerCaseInput[i].ToString()] ++;            
+            if (chars.ContainsKey(lowerCaseInput[i].ToString()))        
+                chars[lowerCaseInput[i].ToString()] ++;            
         }
 
         if (chars.ContainsValue(0))
