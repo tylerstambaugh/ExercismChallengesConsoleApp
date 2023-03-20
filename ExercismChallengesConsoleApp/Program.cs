@@ -1,9 +1,14 @@
 ﻿//main console app
 
 
-var car = RemoteControlCar.Buy();
-var tc = new TelemetryClient(car);
-var output = tc.GetBatteryUsagePerMeter(serialNum: 1);
-Console.WriteLine($"{output}");
+using ExercismChallengesConsoleApp;
+
+var sut = new Allergies(257);
+
+Console.WriteLine("The list:");
+foreach(var item in sut.List())
+{
+   Console.WriteLine($"{item} {((int)item)}");
+}
 
 Console.ReadLine();
