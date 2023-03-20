@@ -7,16 +7,17 @@ using System.Threading.Tasks;
 
 namespace ExercismChallengesConsoleApp
 {
+    [Flags]
     public enum Allergen
     {
-        Eggs,
-        Peanuts,
-        Shellfish,
-        Strawberries,
-        Tomatoes,
-        Chocolate,
-        Pollen,
-        Cats
+        Eggs = 1,
+        Peanuts = 2,
+        Shellfish = 4,
+        Strawberries = 8,
+        Tomatoes = 16,
+        Chocolate = 32,
+        Pollen = 64,
+        Cats = 128
     }
 
     public class Allergies
@@ -26,7 +27,8 @@ namespace ExercismChallengesConsoleApp
         {
            foreach(Allergen a in (Allergen[]) Enum.GetValues(typeof(Allergen)))
             {
-                if((mask & (int)a) == 0 )
+                Console.WriteLine((mask & (int)a).ToString());
+                if ((mask & (int)a) > 0 )
                 {
                     allergens.Add(a);
                 }
