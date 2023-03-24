@@ -31,35 +31,35 @@ public static class Appointment
         string format = "M/d/yyyy HH:mm:ss";
 
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        {
+            if (location == Location.NewYork)
             {
-                if(location == Location.NewYork) 
-                {
-                    returnDateTime = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.ParseExact(appointmentDateDescription, format, CultureInfo.InvariantCulture), "Eastern Standard Time");
-                }
-                if (location == Location.London)
-                {
-                    returnDateTime = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.ParseExact(appointmentDateDescription, format, CultureInfo.InvariantCulture), "GMT Standard Time");
-                }
-                if (location == Location.Paris)
-                {
-                    returnDateTime = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.ParseExact(appointmentDateDescription, format, CultureInfo.InvariantCulture), "W. Europe Standard Time");
-                }
-
+                returnDateTime = TimeZoneInfo.ConvertTimeToUtc(DateTime.ParseExact(appointmentDateDescription, format, CultureInfo.InvariantCulture), TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time"));
+            }
+            if (location == Location.London)
+            {
+                returnDateTime = TimeZoneInfo.ConvertTimeToUtc(DateTime.ParseExact(appointmentDateDescription, format, CultureInfo.InvariantCulture), TimeZoneInfo.FindSystemTimeZoneById("GMT Standard Time"));
+            }
+            if (location == Location.Paris)
+            {
+                returnDateTime = TimeZoneInfo.ConvertTimeToUtc(DateTime.ParseExact(appointmentDateDescription, format, CultureInfo.InvariantCulture), TimeZoneInfo.FindSystemTimeZoneById("W. Europe Standard Time"));
+            }
 
         }
+            
         if(RuntimeInformation.IsOSPlatform(OSPlatform.Linux) || RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
         {
             if (location == Location.NewYork)
             {
-                returnDateTime = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.ParseExact(appointmentDateDescription, format, CultureInfo.InvariantCulture), "America/New_York");
+                returnDateTime = TimeZoneInfo.ConvertTimeToUtc(DateTime.ParseExact(appointmentDateDescription, format, CultureInfo.InvariantCulture), TimeZoneInfo.FindSystemTimeZoneById("America/New_York"));
             }
             if (location == Location.London)
             {
-                returnDateTime = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.ParseExact(appointmentDateDescription, format, CultureInfo.InvariantCulture), "Europe/London");
+                returnDateTime = TimeZoneInfo.ConvertTimeToUtc(DateTime.ParseExact(appointmentDateDescription, format, CultureInfo.InvariantCulture), TimeZoneInfo.FindSystemTimeZoneById("Europe/London"));
             }
             if (location == Location.Paris)
             {
-                returnDateTime = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.ParseExact(appointmentDateDescription, format, CultureInfo.InvariantCulture), "Europe/Paris");
+                returnDateTime = TimeZoneInfo.ConvertTimeToUtc(DateTime.ParseExact(appointmentDateDescription, format, CultureInfo.InvariantCulture), TimeZoneInfo.FindSystemTimeZoneById("Europe/Paris"));
             }
         }
 
