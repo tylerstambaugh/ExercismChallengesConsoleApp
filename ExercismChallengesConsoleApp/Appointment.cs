@@ -94,7 +94,28 @@ public static class Appointment
 
     public static bool HasDaylightSavingChanged(DateTime dt, Location location)
     {
-        throw new NotImplementedException("Please implement the (static) Appointment.HasDaylightSavingChanged() method");
+
+        switch(location)
+        {
+            case Location.London:
+                {
+                    if(TimeZoneInfo.TransitionTime.Equals(dt, dt.AddDays(-7)))
+                    return false;
+                }
+                break;
+            case Location.Paris:
+                {
+                    return false;
+                }
+                break;
+            case Location.NewYork:
+                {
+                    return false;
+                }
+                break;
+            default:
+                throw new ArgumentException();
+        }    
     }
 
     public static DateTime NormalizeDateTime(string dtStr, Location location)
