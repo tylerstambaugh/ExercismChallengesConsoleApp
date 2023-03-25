@@ -70,7 +70,26 @@ public static class Appointment
 
     public static DateTime GetAlertTime(DateTime appointment, AlertLevel alertLevel)
     {
-        throw new NotImplementedException("Please implement the (static) Appointment.GetAlertTime() method");
+        switch(alertLevel)
+        {
+            case AlertLevel.Early:  
+                {
+                    return appointment.AddDays(-1.0);
+                }
+                break;
+            case AlertLevel.Standard:
+                {
+                    return appointment.AddHours(-1.75);
+                }
+                break;
+            case AlertLevel.Late:
+                {
+                    return appointment.AddHours(-0.5);
+                }
+                break;
+            default:
+                throw new ArgumentException();
+        }
     }
 
     public static bool HasDaylightSavingChanged(DateTime dt, Location location)
