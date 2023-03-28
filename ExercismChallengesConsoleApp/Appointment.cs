@@ -70,52 +70,57 @@ public static class Appointment
 
     public static DateTime GetAlertTime(DateTime appointment, AlertLevel alertLevel)
     {
+        DateTime returnDate = new DateTime();
+        TimeSpan early = new TimeSpan(24, 0, 0);
+        TimeSpan normal = new TimeSpan(1, 45, 0);
+        TimeSpan late = new TimeSpan(0, 30, 0);
         switch(alertLevel)
         {
-            case AlertLevel.Early:  
-                {
-                    return appointment.AddDays(-1.0);
-                }
+            case AlertLevel.Early:
+                returnDate = appointment - early;
                 break;
+
             case AlertLevel.Standard:
-                {
-                    return appointment.AddHours(-1.75);
-                }
+                returnDate = appointment - normal;
                 break;
+
             case AlertLevel.Late:
-                {
-                    return appointment.AddHours(-0.5);
-                }
+                    returnDate = appointment - late;
                 break;
+
             default:
                 throw new ArgumentException();
         }
+
+        return returnDate;
     }
 
     public static bool HasDaylightSavingChanged(DateTime dt, Location location)
     {
+        bool returnBool = false;
+        TimeSpan week = new TimeSpan(7, 0, 0, 0);
 
         switch(location)
         {
             case Location.London:
-                {
-                    if(TimeZoneInfo.TransitionTime.Equals(dt, dt.AddDays(-7)))
-                    return false;
-                }
+                if ((TimeZoneInfo.FindSystemTimeZoneById("Europe/London").IsDaylightSavingTime(dt - week) !=
+                    TimeZoneInfo.FindSystemTimeZoneById("Europe/London").IsDaylightSavingTime(dt)))
+                    returnBool = true;
                 break;
             case Location.Paris:
-                {
-                    return false;
-                }
+                if ((TimeZoneInfo.FindSystemTimeZoneById("Europe/Paris").IsDaylightSavingTime(dt - week) !=
+                    TimeZoneInfo.FindSystemTimeZoneById("Europe/Paris").IsDaylightSavingTime(dt)))
+                    returnBool = true;
                 break;
             case Location.NewYork:
-                {
-                    return false;
-                }
+                if ((TimeZoneInfo.FindSystemTimeZoneById("America/New_York").IsDaylightSavingTime(dt - week) !=
+                    TimeZoneInfo.FindSystemTimeZoneById("America/New_York").IsDaylightSavingTime(dt)))
+                    returnBool = true;
                 break;
             default:
                 throw new ArgumentException();
-        }    
+        }
+        return returnBool;
     }
 
     public static DateTime NormalizeDateTime(string dtStr, Location location)
