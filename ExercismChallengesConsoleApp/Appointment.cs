@@ -125,6 +125,34 @@ public static class Appointment
 
     public static DateTime NormalizeDateTime(string dtStr, Location location)
     {
-        throw new NotImplementedException("Please implement the (static) Appointment.NormalizeDateTime() method");
+        DateTime returnDate = new DateTime();
+        DateTime invalidDate = new DateTime(1, 1, 1, 0, 0, 0);
+        string culture = "";
+
+        switch(location)
+        {
+            case Location.NewYork:
+                culture = "en-US";
+                break;
+            case Location.Paris:
+                culture = "fr-FR";
+                break;
+            case Location.London:
+                culture = "en-GB";
+                break;
+            default:
+                break;
+
+        }
+
+        try
+        {
+            returnDate = DateTime.Parse(dtStr, CultureInfo.GetCultureInfo(culture));
+        }
+        catch (FormatException e)
+        {
+            returnDate = invalidDate;
+        }
+        return returnDate;
     }
 }
