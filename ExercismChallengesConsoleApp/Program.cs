@@ -12,10 +12,7 @@ using ExercismChallengesConsoleApp;
 
 //Console.ReadLine();
 
-List<int> nums = new List<int>() { 0, 4, 9, 152, -56 };
+var lines = "The longest line.\n" + "A long line.\n" + "A longer line.\n" + "A line.";
 
-foreach(int i in nums)
-{
-    Console.WriteLine($"steps for {i} = {CollatzConjecture.Steps(i)}");
-}
+Console.WriteLine(Transpose.String(lines));
 Console.ReadLine();
