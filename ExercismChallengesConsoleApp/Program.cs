@@ -32,7 +32,7 @@ var array = new object[]
         };
 
 var flatArry = FlattenArray.Flatten(array);
-Console.WriteLine("array 1:");
+Console.WriteLine("array01:");
 foreach (var item in flatArry)
 {
     Console.WriteLine(item);
