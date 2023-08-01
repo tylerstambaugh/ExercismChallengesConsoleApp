@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System;
+using System.Reflection.Metadata;
 
 public class RestApi
 {
@@ -34,12 +35,14 @@ public class RestApi
 
     public string Get(string url, string payload = null)
     {
-        if (url == "/users")
+        if (url == "/users" && payload != null)
         {
-            return JsonSerializer.Serialize(_database);
+            UserPayload user = JsonSerializer.Deserialize<UserPayload>(payload);
+            var returnUser = _database.Where(x => x.name == user.user).First();
+            return JsonSerializer.Serialize(returnUser);
         }
         else
-            return "not yet";
+            return JsonSerializer.Serialize(_database.OrderBy(x => x.name));
     }
 
     public string Post(string url, string payload)
@@ -53,10 +56,10 @@ public class RestApi
                 name = user.user,
             };
             _database.Add(userToAdd);
-            Console.WriteLine(JsonSerializer.Serialize(_database.Where(x => x.name == user.user)).ToString());
-            return JsonSerializer.Serialize(_database.Where(x => x.name == user.user).First(), new JsonSerializerOptions { WriteIndented = false }); 
 
+            return Get("/users", JsonSerializer.Serialize(new UserPayload { user = userToAdd.name })); 
         }
+
         if (url == "/iou")
         {
             return "working on it";
