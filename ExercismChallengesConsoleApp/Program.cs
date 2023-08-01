@@ -8,10 +8,11 @@ using ExercismChallengesConsoleApp;
 
 
 
-var url = "/add";
-var payload = "{\"user\":\"Adam\"}";
-var database = "[]";
+var url = "/users";
+var payload = "{\"users\":[\"Bob\"]}";
+var database = "[{\"name\":\"Adam\",\"owes\":{},\"owed_by\":{},\"balance\":0},{\"name\":\"Bob\",\"owes\":{},\"owed_by\":{},\"balance\":0}]";
 var sut = new RestApi(database);
+var actual = sut.Get(url, payload);
 
-sut.Post(url, payload);
+Console.WriteLine(actual);  
 Console.ReadLine();
