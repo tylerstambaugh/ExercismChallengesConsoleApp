@@ -1,27 +1,24 @@
 ﻿using System.Text.Json;
 using System.Collections.Generic;
+using System.Linq;
+using System;
 
 public class RestApi
 {
-
+   
     public class User
     {
         public string name { get; set; }
-        public List<Owes> owes { get; set; }
-        public List<Owed_By> owed_by { get; set; }
-        public decimal balance { get; set; } = 0;
+        public Dictionary<string, decimal> owes { get; set; } = new Dictionary<string, decimal>();
+        public Dictionary<string, decimal> owed_by { get; set; } = new Dictionary<string, decimal>();
+        public decimal? balance { get; set; } = 0;
 
-        public class Owes
-        {
-            public string Name { get; set; }
-            public decimal Amount { get; set; }
-        }
+   
+    }
 
-        public class Owed_By
-        {
-            public string Name { get; set; }
-            public decimal Amount { get; set; }
-        }
+    public class UserPayload
+    {
+        public string? user { get; set; }
     }
 
     private List<User> _database = new List<User>();
@@ -47,16 +44,17 @@ public class RestApi
 
     public string Post(string url, string payload)
     {
-        User user = JsonSerializer.Serialize<User>(payload);
+        UserPayload user = JsonSerializer.Deserialize<UserPayload>(payload);
 
         if (url == "/add")
         {
             User userToAdd = new User
             {
-                name = user.name,
+                name = user.user,
             };
             _database.Add(userToAdd);
-            return JsonSerializer.Serialize(userToAdd);
+            Console.WriteLine(JsonSerializer.Serialize(_database.Where(x => x.name == user.user)).ToString());
+            return JsonSerializer.Serialize(_database.Where(x => x.name == user.user).First(), new JsonSerializerOptions { WriteIndented = false }); 
 
         }
         if (url == "/iou")
