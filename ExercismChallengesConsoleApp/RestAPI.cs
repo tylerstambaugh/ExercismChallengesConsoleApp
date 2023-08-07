@@ -17,9 +17,18 @@ public class RestApi
    
     }
 
+    public class UsersPayload
+    {
+        public UsersPayload()
+        {
+            
+        }
+        public List<string> users { get; set; }
+    }
+
     public class UserPayload
     {
-        public string? user { get; set; }
+        public string user { get; set; }
     }
 
     private List<User> _database = new List<User>();
@@ -37,8 +46,9 @@ public class RestApi
     {
         if (url == "/users" && payload != null)
         {
-            UserPayload user = JsonSerializer.Deserialize<UserPayload>(payload);
-            var returnUser = _database.Where(x => x.name == user.user).First();
+            var userList = JsonSerializer.Deserialize<UsersPayload>(payload);
+            var userNameToFind = userList.users[0];
+            var returnUser = _database.Where(x => x.name == userNameToFind);
             return JsonSerializer.Serialize(returnUser);
         }
         else
@@ -47,17 +57,22 @@ public class RestApi
 
     public string Post(string url, string payload)
     {
-        UserPayload user = JsonSerializer.Deserialize<UserPayload>(payload);
 
         if (url == "/add")
         {
+        var user = JsonSerializer.Deserialize<UserPayload>(payload);
             User userToAdd = new User
             {
                 name = user.user,
             };
             _database.Add(userToAdd);
 
-            return Get("/users", JsonSerializer.Serialize(new UserPayload { user = userToAdd.name })); 
+            var usersPayload = new UsersPayload
+            {
+                users = new List<string> { user.user }
+            };
+
+            return Get("/users", JsonSerializer.Serialize(usersPayload)); 
         }
 
         if (url == "/iou")
