@@ -3,23 +3,12 @@
 
 using ExercismChallengesConsoleApp;
 
-//var database = "[{\"name\":\"Adam\",\"owes\":{},\"owed_by\":{},\"balance\":0},{\"name\":\"Bob\",\"owes\":{},\"owed_by\":{},\"balance\":0}]";
 
-
-
-
-//var url = "/users";
-//var payload = "{\"users\":[\"Bob\"]}";
-//var database = "[{\"name\":\"Adam\",\"owes\":{},\"owed_by\":{},\"balance\":0},{\"name\":\"Bob\",\"owes\":{},\"owed_by\":{},\"balance\":0}]";
-//var sut = new RestApi(database);
-//var actual = sut.Get(url, payload);
-
-
-var url = "/users";
-var payload = "{\"users\":[\"Bob\"]}";
+var url = "/iou";
+var payload = "{\"lender\":\"Adam\",\"borrower\":\"Bob\",\"amount\":3}";
 var database = "[{\"name\":\"Adam\",\"owes\":{},\"owed_by\":{},\"balance\":0},{\"name\":\"Bob\",\"owes\":{},\"owed_by\":{},\"balance\":0}]";
 var sut = new RestApi(database);
-var actual = sut.Get(url, payload);
+var actual = sut.Post(url, payload);
 
 
 Console.WriteLine(actual);  
