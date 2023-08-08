@@ -12,14 +12,28 @@ public class RestApi
         public string name { get; set; }
         public Dictionary<string, decimal> owes { get; set; } = new Dictionary<string, decimal>();
         public Dictionary<string, decimal> owed_by { get; set; } = new Dictionary<string, decimal>();
-        public decimal? balance { get; set; } = 0;
+        public decimal? balance { get; set; } = 0;   
+    }
 
-   
+    public class UsersPayload
+    {
+        public UsersPayload()
+        {
+            
+        }
+        public List<string> users { get; set; }
     }
 
     public class UserPayload
     {
-        public string? user { get; set; }
+        public string user { get; set; }
+    }
+
+    public class LenderPayload
+    {
+        public string lender { get; set; }
+        public string borrower { get; set; }
+        public decimal amount { get; set; }
     }
 
     private List<User> _database = new List<User>();
@@ -37,8 +51,9 @@ public class RestApi
     {
         if (url == "/users" && payload != null)
         {
-            UserPayload user = JsonSerializer.Deserialize<UserPayload>(payload);
-            var returnUser = _database.Where(x => x.name == user.user).First();
+            var userList = JsonSerializer.Deserialize<UsersPayload>(payload);
+            var userNameToFind = userList.users[0];
+            var returnUser = _database.Where(x => x.name == userNameToFind);
             return JsonSerializer.Serialize(returnUser);
         }
         else
@@ -47,22 +62,41 @@ public class RestApi
 
     public string Post(string url, string payload)
     {
-        UserPayload user = JsonSerializer.Deserialize<UserPayload>(payload);
 
         if (url == "/add")
         {
+        var user = JsonSerializer.Deserialize<UserPayload>(payload);
             User userToAdd = new User
             {
                 name = user.user,
             };
             _database.Add(userToAdd);
 
-            return Get("/users", JsonSerializer.Serialize(new UserPayload { user = userToAdd.name })); 
+            var usersPayload = new UsersPayload
+            {
+                users = new List<string> { user.user }
+            };
+
+            return JsonSerializer.Serialize(userToAdd); 
         }
 
         if (url == "/iou")
         {
-            return "working on it";
+           var entry = JsonSerializer.Deserialize<LenderPayload>(payload);
+
+            //update lender db record
+            var lender = _database.Where(x => x.name == entry.lender).First();
+
+            lender.owed_by[entry.borrower] = entry.amount;
+            lender.balance += entry.amount;
+
+            //update lent db record
+            var borrower = _database.Where(x => x.name == entry.borrower).First();
+            borrower.owes[entry.lender] = entry.amount;
+            borrower.balance -= entry.amount;
+
+            //return user list
+            return JsonSerializer.Serialize(_database.OrderBy(x => x.name));
         }
         else
         {
