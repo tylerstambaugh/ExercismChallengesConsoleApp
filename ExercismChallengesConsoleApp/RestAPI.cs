@@ -10,8 +10,8 @@ public class RestApi
     public class User
     {
         public string name { get; set; }
-        public Dictionary<string, decimal> owes { get; set; } = new Dictionary<string, decimal>();
-        public Dictionary<string, decimal> owed_by { get; set; } = new Dictionary<string, decimal>();
+        public SortedDictionary<string, decimal> owes { get; set; } = new SortedDictionary<string, decimal>();
+        public SortedDictionary<string, decimal> owed_by { get; set; } = new SortedDictionary<string, decimal>();
         public decimal? balance { get; set; } = 0;   
     }
 
@@ -87,16 +87,16 @@ public class RestApi
             //update lender db record
             var lender = _database.Where(x => x.name == entry.lender).First();
 
-            lender.owed_by[entry.borrower] = entry.amount;
+            lender.owed_by[entry.borrower] = lender.owed_by[entry.borrower] += entry.amount;
             lender.balance += entry.amount;
 
             //update lent db record
             var borrower = _database.Where(x => x.name == entry.borrower).First();
-            borrower.owes[entry.lender] = entry.amount;
+            borrower.owes[entry.lender] = borrower.owes[entry.borrower] -= entry.amount;
             borrower.balance -= entry.amount;
 
             //return user list
-            return JsonSerializer.Serialize(_database.OrderBy(x => x.name));
+            return JsonSerializer.Serialize(_database.Where(x => x.name == lender.name || x.name == borrower.name).OrderBy(y => y.name));
         }
         else
         {
