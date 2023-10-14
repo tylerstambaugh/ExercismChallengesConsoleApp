@@ -28,7 +28,7 @@ public static class Sieve
                     _list[i] = true;
                     returnList.Add(i);
 
-                    for (int j = 1; j * i < limit; j++)
+                    for (int j = 1; j * i <= limit; j++)
                     {
                         _list[j * i] = true;
                     }
