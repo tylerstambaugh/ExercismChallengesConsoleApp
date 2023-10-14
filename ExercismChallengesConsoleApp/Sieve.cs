@@ -1,38 +1,41 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 public static class Sieve
 {
-    private static Dictionary<int, bool> _list = new Dictionary<int, bool>();
     public static int[] Primes(int limit)
     {
+        Dictionary<int, bool> _list = new Dictionary<int, bool>();
         List<int> returnList = new List<int>();
 
         //create dict up to limit
-        
-        for(int i = 1; i < limit; i++)
+        if (limit < 0)
         {
-           _list.Add(i, true);
+            throw new ArgumentOutOfRangeException("limit");
         }
-
-        int nextPrime = 1;
-        while(nextPrime < limit)
+        else
         {
-            nextPrime = _list.FirstOrDefault(x => x.Key > 1 && x.Value).Key;
-
-            for(int i = nextPrime; i < limit; i *= nextPrime)
+            for (int i = 2; i <= limit; i++)
             {
-                _list[i] = false;
+                _list.Add(i, false);
             }
-        }
 
-        foreach(int i in _list.Keys)
-        {
-            if(i.Equals(true))
+            for (int i = 2; i <= limit; i++)
             {
-                returnList.Add(i);
-            }
-        }
+                if (_list[i] == false)
+                {
+                    _list[i] = true;
+                    returnList.Add(i);
 
-        return returnList.ToArray();
+                    for (int j = 1; j * i < limit; j++)
+                    {
+                        _list[j * i] = true;
+                    }
+                }
+            }
+
+            return returnList.ToArray();
+        }
     }
 }
