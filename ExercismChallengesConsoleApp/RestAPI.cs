@@ -83,16 +83,31 @@ public class RestApi
         if (url == "/iou")
         {
            var entry = JsonSerializer.Deserialize<LenderPayload>(payload);
-
             //update lender db record
             var lender = _database.Where(x => x.name == entry.lender).First();
 
-            lender.owed_by[entry.borrower] = entry.amount;
+            if (lender.owed_by.TryGetValue(entry.borrower, out decimal lendAmt))
+            {
+                lender.owed_by[entry.borrower] = lendAmt + entry.amount;
+            }
+            else
+            {
+                lender.owed_by[entry.borrower] = entry.amount;
+            }
             lender.balance += entry.amount;
 
             //update lent db record
             var borrower = _database.Where(x => x.name == entry.borrower).First();
-            borrower.owes[entry.lender] = entry.amount;
+
+            if (borrower.owes.TryGetValue(entry.lender, out decimal oweAmt))
+            {
+                borrower.owes[entry.borrower] = oweAmt + entry.amount;
+            }
+            else
+            {
+                borrower.owes[entry.borrower] = entry.amount;
+            }
+            borrower.owes[entry.lender] = borrower.owes[entry.borrower] -= entry.amount;
             borrower.balance -= entry.amount;
 
             //return user list
