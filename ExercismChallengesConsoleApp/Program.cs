@@ -12,7 +12,7 @@ using ExercismChallengesConsoleApp;
 //Console.WriteLine(actual);  
 //Console.ReadLine();
 
-var list = Sieve.Primes(13).ToArray();
+var list = Sieve.Primes(10).ToArray();
 
 foreach (var item in list)
 {
