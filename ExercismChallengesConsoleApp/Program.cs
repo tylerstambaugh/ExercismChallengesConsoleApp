@@ -19,3 +19,5 @@ foreach (var item in list)
     Console.WriteLine(item);
 }
 Console.ReadLine();
+
+HighSchoolSweethearts.DisplaySingleLine("Lance Green", "Pat Riley");
