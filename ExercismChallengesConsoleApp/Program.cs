@@ -12,12 +12,15 @@ using ExercismChallengesConsoleApp;
 //Console.WriteLine(actual);  
 //Console.ReadLine();
 
-var list = Sieve.Primes(10).ToArray();
+//var list = Sieve.Primes(10).ToArray();
 
-foreach (var item in list)
-{
-    Console.WriteLine(item);
-}
-Console.ReadLine();
+//foreach (var item in list)
+//{
+//    Console.WriteLine(item);
+//}
+//Console.ReadLine();
 
-HighSchoolSweethearts.DisplaySingleLine("Lance Green", "Pat Riley");
+// HighSchoolSweethearts.DisplaySingleLine("Lance Green", "Pat Riley");
+
+Console.WriteLine(HighSchoolSweethearts.DisplayGermanExchangeStudents("Norbert", "Heidi", new DateTime(2019, 1, 22), 1535.22f));
+Console.ReadLine();  
