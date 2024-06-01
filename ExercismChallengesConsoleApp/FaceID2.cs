@@ -1,10 +1,13 @@
-﻿namespace ExercismChallengesConsoleApp
+﻿//https://exercism.org/tracks/csharp/exercises/faceid-2
+
+namespace ExercismChallengesConsoleApp
 {
 
     public class FacialFeatures
     {
         public string EyeColor { get; }
         public decimal PhiltrumWidth { get; }
+        
 
         public FacialFeatures(string eyeColor, decimal philtrumWidth)
         {
@@ -13,15 +16,20 @@
         }
         // TODO: implement equality and GetHashCode() methods
 
-        public override Equals()
+        public override bool Equals(object? obj)
         {
-
+            if (obj is FacialFeatures other)
+            {
+                return EyeColor == other.EyeColor && PhiltrumWidth == other.PhiltrumWidth;
+            }
+            return false;
         }
 
-        public bool CheckHashCode<T, K>(T item, K other)
+        public override int GetHashCode()
         {
-            return item.GetHashCode() == other.GetHashCode();
+            return HashCode.Combine(EyeColor, PhiltrumWidth);
         }
+
     }
 
     public class Identity
@@ -35,33 +43,55 @@
             FacialFeatures = facialFeatures;
         }
         // TODO: implement equality and GetHashCode() methods
+        public override bool Equals(object? obj)
+        {
+            if (obj is Identity other)
+            {
+                return Email == other.Email && FacialFeatures.Equals(other.FacialFeatures);
+            }
+            return false;
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Email, FacialFeatures.GetHashCode);
+        }
     }
 
     public class Authenticator
     {
+        public List<Identity> Identities { get; } = new List<Identity>();
         public static bool AreSameFace(FacialFeatures faceA, FacialFeatures faceB)
         {
-            throw new NotImplementedException("Please implement the (static) Authenticator.AreSameFace() method");
+            return faceA.Equals(faceB);
         }
 
         public bool IsAdmin(Identity identity)
         {
-            throw new NotImplementedException("Please implement the Authenticator.IsAdmin() method");
+            var adminFF = new FacialFeatures("green", 0.9m);
+            var adminIdent = new Identity("admin@exerc.ism", adminFF);
+           return identity.Equals(adminIdent);
         }
 
         public bool Register(Identity identity)
         {
-            throw new NotImplementedException("Please implement the Authenticator.Register() method");
+            if (Identities.Contains(identity))
+                return false;
+            else
+            {
+                Identities.Add(identity);
+                return true;
+            }
         }
 
         public bool IsRegistered(Identity identity)
         {
-            throw new NotImplementedException("Please implement the Authenticator.IsRegistered() method");
+           return Identities.Contains(identity);
         }
 
         public static bool AreSameObject(Identity identityA, Identity identityB)
         {
-            throw new NotImplementedException("Please implement the Authenticator.AreSameObject() method");
+            return identityA.GetHashCode() == identityB.GetHashCode();
         }
     }
 
