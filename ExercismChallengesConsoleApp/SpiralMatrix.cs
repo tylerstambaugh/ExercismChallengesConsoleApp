@@ -65,15 +65,6 @@ public class SpiralMatrix
                 keepRunning = keyValue <= intSize;
             }
 
-            for (int x = 0; x < size; x++)
-            {
-                for (int y = 0; y < size; y++)
-                {
-                    Console.Write(returnArray[x, y] + ",");
-                }
-                Console.WriteLine(); ;
-            }
-
             return returnArray;
 
         }
