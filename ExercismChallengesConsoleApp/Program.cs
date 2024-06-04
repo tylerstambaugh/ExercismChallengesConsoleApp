@@ -4,4 +4,4 @@
 using ExercismChallengesConsoleApp;
 
 
-var output = SpiralMatrix.GetMatrix(5);
+var result = TelemetryBuffer.ToBuffer(65533);
