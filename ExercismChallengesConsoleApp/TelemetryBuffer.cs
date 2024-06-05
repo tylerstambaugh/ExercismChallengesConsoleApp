@@ -5,39 +5,21 @@ public static class TelemetryBuffer
 {
     public static byte[] ToBuffer(long reading)
     {
-        //byte[] returnArray = new byte[];
-        if (reading > 0 && reading < 65535)
+        var bytes = reading switch
         {
-            long payload = reading; // Example integer to convert to bytes
-            byte[] payloadBytes = BitConverter.GetBytes(payload); // Convert the integer to bytes
-            byte payloadSize = (byte)payloadBytes.Length; // Determine the payload size
+            < Int32.MinValue => BitConverter.GetBytes((long)reading).Prepend((byte)(256 - 8)),
+            < Int16.MinValue => BitConverter.GetBytes((int)reading).Prepend((byte)(256 - 4)),
+            < UInt16.MinValue => BitConverter.GetBytes((short)reading).Prepend((byte)(256 - 2)),
+            <= UInt16.MaxValue => BitConverter.GetBytes((ushort)reading).Prepend((byte)2),
+            <= Int32.MaxValue => BitConverter.GetBytes((int)reading).Prepend((byte)(256 - 4)),
+            <= UInt32.MaxValue => BitConverter.GetBytes((uint)reading).Prepend((byte)4),
+            _ => BitConverter.GetBytes((long)reading).Prepend((byte)(256 - 8)),
+        };
 
-            byte[] byteArray = new byte[payloadSize + 1]; // Create the final byte array
-            byteArray[0] = payloadSize; // Set the first byte to the payload size
-            Array.Copy(payloadBytes, 0, byteArray, 1, payloadSize); // Copy the payload bytes to the final array
-
-            // Print the byte array for verification
-            Console.WriteLine(BitConverter.ToString(byteArray));
-            return byteArray;
-        }
-        else
-        {
-            var returnArray =  BitConverter.GetBytes(reading);
-            var returnArrayAsHex = ByteArrayToHexString(returnArray);
-            return returnArray;
-        }
+        return bytes.Concat(new byte[9-bytes.Count()]).ToArray();
     }
 
 
-    static string ByteArrayToHexString(byte[] byteArray)
-    {
-        StringBuilder hex = new StringBuilder(byteArray.Length * 2);
-        foreach (byte b in byteArray)
-        {
-            hex.AppendFormat("{0:X2}", b);
-        }
-        return hex.ToString();
-    }
 
     public static long FromBuffer(byte[] buffer)
     {
