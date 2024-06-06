@@ -1,7 +1,4 @@
-﻿using System;
-using System.Text;
-
-public static class TelemetryBuffer
+﻿public static class TelemetryBuffer
 {
     public static byte[] ToBuffer(long reading)
     {
@@ -16,13 +13,16 @@ public static class TelemetryBuffer
             _ => BitConverter.GetBytes((long)reading).Prepend((byte)(256 - 8)),
         };
 
-        return bytes.Concat(new byte[9-bytes.Count()]).ToArray();
+        return bytes.Concat(new byte[9 - bytes.Count()]).ToArray();
     }
 
 
 
-    public static long FromBuffer(byte[] buffer)
+    public static long FromBuffer(byte[] buffer) => buffer[0] switch
     {
-        return BitConverter.ToInt64(buffer, 0);
-    }
+        256 - 8 or 4 or 2 => BitConverter.ToInt64(buffer, 1),
+        256 - 4 => BitConverter.ToInt32(buffer, 1),
+        256 - 2 => BitConverter.ToInt16(buffer, 1),
+        _ => 0,
+    };
 }
