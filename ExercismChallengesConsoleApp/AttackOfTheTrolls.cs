@@ -19,6 +19,8 @@ enum Permission : byte
     All = 1 << 4
 }
 
+//crashed at the velodrome. Might finish this later. 
+
 static class Permissions
 {
     public static Permission Default(AccountType accountType) => accountType switch
