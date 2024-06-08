@@ -2,7 +2,7 @@
 using System.Security;
 
 [Flags]
- enum AccountType : byte
+enum AccountType : byte
 {
     Guest = Permission.Read,
     User = Permission.Read | Permission.Write,
@@ -15,11 +15,10 @@ enum Permission : byte
     None = 0,
     Read = 1 << 0,
     Write = 1 << 1,
-    Delete = 1 << 2,  
+    Delete = 1 << 2,
     All = Read | Write | Delete
 }
 
-//crashed at the velodrome. Might finish this later. 
 
 static class Permissions
 {
@@ -31,10 +30,8 @@ static class Permissions
         _ => Permission.None
 
     };
-    public static Permission Grant(Permission current, Permission grant)
-    {
-        return current | grant;
-    }
+    public static Permission Grant(Permission current, Permission grant) => current | grant;
+
     public static Permission Revoke(Permission current, Permission revoke)
     {
         return current & ~revoke;
@@ -42,6 +39,6 @@ static class Permissions
 
     public static bool Check(Permission current, Permission check)
     {
-        throw new NotImplementedException("Please implement the (static) Permissions.Check() method");
+        return (current & check) == check;
     }
 }
