@@ -13,10 +13,10 @@ using System.Security;
 enum Permission : byte
 {
     None = 0,
-    Read = 1 << 1,
-    Write = 1 << 2,
-    Delete = 1 << 3,  
-    All = 1 << 4
+    Read = 1 << 0,
+    Write = 1 << 1,
+    Delete = 1 << 2,  
+    All = Read | Write | Delete
 }
 
 //crashed at the velodrome. Might finish this later. 
@@ -28,15 +28,16 @@ static class Permissions
         AccountType.Guest => Permission.Read,
         AccountType.User => Permission.Read | Permission.Write,
         AccountType.Moderator => Permission.Read | Permission.Write | Permission.Delete,
+        _ => Permission.None
 
     };
     public static Permission Grant(Permission current, Permission grant)
     {
-        throw new NotImplementedException("Please implement the (static) Permissions.Grant() method");
+        return current | grant;
     }
     public static Permission Revoke(Permission current, Permission revoke)
     {
-        throw new NotImplementedException("Please implement the (static) Permissions.Revoke() method");
+        return current & ~revoke;
     }
 
     public static bool Check(Permission current, Permission check)
