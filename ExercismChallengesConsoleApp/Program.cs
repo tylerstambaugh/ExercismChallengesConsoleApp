@@ -4,4 +4,4 @@
 using ExercismChallengesConsoleApp;
 
 
-var result = TelemetryBuffer.ToBuffer(65533);
+var result = PerfectNumbers.Classify(6);
