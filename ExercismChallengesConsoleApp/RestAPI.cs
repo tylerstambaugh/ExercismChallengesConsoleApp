@@ -83,32 +83,49 @@ public class RestApi
         if (url == "/iou")
         {
            var entry = JsonSerializer.Deserialize<LenderPayload>(payload);
-            //update lender db record
             var lender = _database.Where(x => x.name == entry.lender).First();
+            var borrower = _database.Where(x => x.name == entry.borrower).First();
 
-            if (lender.owed_by.TryGetValue(entry.borrower, out decimal lendAmt))
+            //update lender db record
+            if (lender.owed_by.TryGetValue(borrower.name, out decimal owesAmt))
             {
-                lender.owed_by[entry.borrower] = lendAmt + entry.amount;
+                lender.owed_by[borrower.name] = owesAmt + entry.amount;
+            }
+            else if(lender.owes.TryGetValue(borrower.name, out decimal owedAmt))
+            {
+                lender.owes[borrower.name] = owedAmt - entry.amount;
+                if (lender.owes[borrower.name] < 0)
+                {
+                    lender.owes.Remove(borrower.name);
+                    lender.owed_by.Add(borrower.name, Math.Abs(owedAmt - entry.amount));
+                }
             }
             else
             {
-                lender.owed_by[entry.borrower] = entry.amount;
+                lender.owed_by[borrower.name] = entry.amount;
             }
 
             lender.balance += entry.amount;
 
             //update lent db record
-            var borrower = _database.Where(x => x.name == entry.borrower).First();
-
-            if (borrower.owes.TryGetValue(entry.lender, out decimal oweAmt))
+            if (borrower.owes.TryGetValue(lender.name, out decimal oweAmt))
             {
-                borrower.owes[entry.borrower] = oweAmt + entry.amount;
+                borrower.owes[lender.name] = oweAmt + entry.amount;
+            }
+            else if (borrower.owed_by.TryGetValue(lender.name, out decimal owedAmt))
+            {
+                borrower.owed_by[lender.name] = owedAmt - entry.amount;
+                if (borrower.owed_by[lender.name] < 0)
+                {
+                    borrower.owes.Remove(lender.name);
+                    borrower.owed_by[lender.name] = Math.Abs(owedAmt + entry.amount);
+                }
             }
             else
             {
-                borrower.owes[entry.borrower] = entry.amount;
+                borrower.owes[lender.name] = entry.amount;
             }
-            borrower.owes[entry.lender] = borrower.owes[entry.borrower] -= entry.amount;
+           //borrower.owes[entry.lender] = borrower.owes[entry.lender] -= entry.amount;
             borrower.balance -= entry.amount;
 
             //return user list
