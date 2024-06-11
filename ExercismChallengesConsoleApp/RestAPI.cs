@@ -94,6 +94,15 @@ public class RestApi
             else if(lender.owes.TryGetValue(borrower.name, out decimal owedAmt))
             {
                 lender.owes[borrower.name] = owedAmt - entry.amount;
+                if (lender.owes[borrower.name] == 0)
+                {
+                    lender.owes.Remove(borrower.name);
+                    borrower.owed_by.Remove(lender.name);
+                    lender.balance += entry.amount;
+                    borrower.balance -= entry.amount;
+                    return JsonSerializer.Serialize(_database.Where(x => x.name == lender.name || x.name == borrower.name).OrderBy(y => y.name));
+
+                }
                 if (lender.owes[borrower.name] < 0)
                 {
                     lender.owes.Remove(borrower.name);
@@ -115,10 +124,14 @@ public class RestApi
             else if (borrower.owed_by.TryGetValue(lender.name, out decimal owedAmt))
             {
                 borrower.owed_by[lender.name] = owedAmt - entry.amount;
+                if (borrower.owed_by[lender.name] == 0)
+                {
+                    borrower.owed_by.Remove(lender.name);
+                }
                 if (borrower.owed_by[lender.name] < 0)
                 {
-                    borrower.owes.Remove(lender.name);
-                    borrower.owed_by[lender.name] = Math.Abs(owedAmt + entry.amount);
+                    borrower.owed_by.Remove(lender.name);
+                    borrower.owes.Add(lender.name, entry.amount - owedAmt);
                 }
             }
             else
