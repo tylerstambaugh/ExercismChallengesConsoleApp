@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using static System.Reflection.Metadata.BlobBuilder;
 
+
+//https://exercism.org/tracks/csharp/exercises/land-grab-in-space/edit
 public struct Coord
 {
     public Coord(ushort x, ushort y)
@@ -12,6 +15,16 @@ public struct Coord
 
     public ushort X { get; }
     public ushort Y { get; }
+
+    public static bool operator >(Coord c1, Coord c2)
+    {
+        return c1.X > c2.X && c1.Y > c2.Y;
+    }
+
+    public static bool operator <(Coord c1, Coord c2)
+    {
+        return !(c1 > c2);
+    }
 }
 
 public struct Plot
@@ -21,7 +34,7 @@ public struct Plot
     {
         A = a;
         B = b;
-        C = c; 
+        C = c;
         D = d;
     }
 
@@ -30,43 +43,44 @@ public struct Plot
     public Coord C { get; }
     public Coord D { get; }
 
+    public static bool operator >(Plot p1, Plot p2)
+    {
+        return p1.A > p2.A && p1.B > p2.B && p1.C > p2.C && p1.D > p2.D;
+    }
+
+
+    public static bool operator <(Plot p1, Plot p2)
+    {
+        return !(p1 > p2);
+    }
 }
 
 
 public class ClaimsHandler
 {
     private List<Plot> _plots = new List<Plot>();
-    public void StakeClaim(Plot plot)
-    {
-        _plots.Add(plot);
-    }
+    private Plot _lastPlot;
 
-    public bool IsClaimStaked(Plot plot)
-    {
-        return _plots.Contains(plot);
-    }
+    public void StakeClaim(Plot plot) => _plots.Add(plot);
+
+    public bool IsClaimStaked(Plot plot) => _plots.Contains(plot);
 
     public bool IsLastClaim(Plot plot)
     {
-       return _plots.Last().GetHashCode() == plot.GetHashCode();   
+        return _plots.Last().GetHashCode() == plot.GetHashCode();
     }
 
     public Plot GetClaimWithLongestSide()
     {
-        Plot longestSidedPlot;
-        int aDiff = 0;
-        int bDiff = 0;
-        int cDiff = 0;
-        int dDiff = 0;
-
-       foreach(Plot plot in _plots)
+        Plot maxPlot = _lastPlot;
+        foreach (var plot in _plots)
         {
-            aDiff = Math.Abs(plot.A.X - plot.B.X);
-            bDiff = Math.Abs(plot.B.X - plot.C.X);
-            cDiff = Math.Abs(plot.C.X - plot.D.X);
-            dDiff = Math.Abs(plot.D.X - plot.A.X);
+            return plot;
+            if (plot > maxPlot)
+            {
+                maxPlot = plot;
+            }
         }
-
-        return longestSidedPlot;
+        return maxPlot;
     }
 }
