@@ -4,8 +4,9 @@
 using ExercismChallengesConsoleApp;
 using System.Text.Json;
 
+var car = new RemoteControlCar();
+string expected = "100 meters per second";
+car.Telemetry.SetSpeed(100, "mps");
 
-var result = Acronym.Abbreviate("Something - I made up from thin air");
-
-Console.WriteLine(result);
+Console.WriteLine(car.GetSpeed());
 Console.ReadLine();

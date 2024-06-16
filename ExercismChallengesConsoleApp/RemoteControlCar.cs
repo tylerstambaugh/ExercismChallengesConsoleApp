@@ -1,5 +1,7 @@
 ﻿//https://exercism.org/tracks/csharp/exercises/remote-control-cleanup/edit
 
+using System.Runtime.CompilerServices;
+using System.Security.AccessControl;
 using static RemoteControlCar;
 
 public class RemoteControlCar
@@ -17,8 +19,13 @@ public class RemoteControlCar
         public void SetSpeed(decimal amount, string unitsString);
     }
 
+    public RemoteControlCar()
+    {
+        Telemetry = new RemoteControlCarTelemetry(this);
+    }
 
-    private class RemoteControlCarTelemetry
+
+    private class RemoteControlCarTelemetry : ITelemetry
     {
         private readonly RemoteControlCar _car;
 
@@ -72,13 +79,13 @@ public class RemoteControlCar
     }
 }
 
-public enum SpeedUnits
+internal enum SpeedUnits
 {
     MetersPerSecond,
     CentimetersPerSecond
 }
 
-public struct Speed
+internal struct Speed
 {
     public decimal Amount { get; }
     public SpeedUnits SpeedUnits { get; }
