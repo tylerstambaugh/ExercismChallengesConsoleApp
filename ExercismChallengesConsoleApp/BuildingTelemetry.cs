@@ -4,7 +4,7 @@ using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
 
-public class RemoteControlCar
+public class RemoteControlCar2
 {
     private int batteryPercentage = 100;
     private int distanceDrivenInMeters = 0;
@@ -51,17 +51,17 @@ public class RemoteControlCar
         }
     }
 
-    public static RemoteControlCar Buy()
+    public static RemoteControlCar2 Buy()
     {
-        return new RemoteControlCar();        
+        return new RemoteControlCar2();        
     }
 }
 
 public class TelemetryClient
 {
-    private RemoteControlCar car;
+    private RemoteControlCar2 car;
 
-    public TelemetryClient(RemoteControlCar car)
+    public TelemetryClient(RemoteControlCar2 car)
     {
         this.car = car;
     }
