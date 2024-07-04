@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 public class Authenticator
 {
@@ -16,7 +17,7 @@ public class Authenticator
         this.admin = admin;
     }
 
-    private Identity admin { get;  }
+    private readonly Identity admin;
 
     private readonly IDictionary<string, Identity> developers
         = new Dictionary<string, Identity>
@@ -41,7 +42,7 @@ public class Authenticator
 
     public IDictionary<string, Identity> GetDevelopers()
     {
-        return developers;
+        return new ReadOnlyDictionary<string, Identity>(developers);
     }
 }
 
