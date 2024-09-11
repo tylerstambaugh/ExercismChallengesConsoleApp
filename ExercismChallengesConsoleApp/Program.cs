@@ -4,9 +4,6 @@
 using ExercismChallengesConsoleApp;
 using System.Text.Json;
 
-var car = new RemoteControlCar();
-string expected = "100 meters per second";
-car.Telemetry.SetSpeed(100, "mps");
+var cipher = new RotationalCipher();
 
-Console.WriteLine(car.GetSpeed());
-Console.ReadLine();
+var result = RotationalCipher.Rotate("a", 1);
