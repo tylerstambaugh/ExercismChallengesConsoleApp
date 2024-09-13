@@ -6,4 +6,4 @@ using System.Text.Json;
 
 var cipher = new RotationalCipher();
 
-var result = RotationalCipher.Rotate("a", 1);
+var result = RotationalCipher.Rotate("OMG", 5);
