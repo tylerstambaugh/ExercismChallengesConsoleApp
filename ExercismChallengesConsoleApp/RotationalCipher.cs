@@ -16,9 +16,9 @@
         public static string Rotate(string text, int shiftKey)
         {
             var cipherList = lowerAlphabetList.GetRange(shiftKey, lowerAlphabetList.Count - shiftKey).ToList();
-            cipherList.AddRange(cipherList.GetRange(0, shiftKey));
+            cipherList.AddRange(lowerAlphabetList.GetRange(0, shiftKey));
             var upperCipherlist = upperAlphabetList.GetRange(shiftKey, upperAlphabetList.Count - shiftKey).ToList();
-            upperCipherlist.AddRange(upperCipherlist.GetRange(0, shiftKey));
+            upperCipherlist.AddRange(upperAlphabetList.GetRange(0, shiftKey));
             cipherList.AddRange(upperCipherlist);
 
             lowerAlphabetList.AddRange(upperAlphabetList);
@@ -26,7 +26,7 @@
             var fullAlphabetlist = lowerAlphabetList;
 
 
-            var returnText = new string(CipherText(text.ToLower(), fullAlphabetlist, cipherList).ToArray());
+            var returnText = new string(CipherText(text, fullAlphabetlist, cipherList).ToArray());
 
 
             return returnText;
