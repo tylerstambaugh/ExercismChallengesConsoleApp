@@ -6,4 +6,6 @@ using System.Text.Json;
 
 var cipher = new RotationalCipher();
 
-var result = RotationalCipher.Rotate("The quick brown fox jumps over the lazy dog.", 13);
+//var result = RotationalCipher.Rotate("The quick brown fox jumps over the lazy dog.", 13);
+var result = RotationalCipher.Rotate("a", 26);
+Console.WriteLine($"Result: {result}");

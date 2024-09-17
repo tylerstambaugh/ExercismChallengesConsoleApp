@@ -15,21 +15,16 @@
             };
         public static string Rotate(string text, int shiftKey)
         {
+            var fullAlphabetlist = lowerAlphabetList.Concat(upperAlphabetList).ToList();
+
             var cipherList = lowerAlphabetList.GetRange(shiftKey, lowerAlphabetList.Count - shiftKey).ToList();
             cipherList.AddRange(lowerAlphabetList.GetRange(0, shiftKey));
             var upperCipherlist = upperAlphabetList.GetRange(shiftKey, upperAlphabetList.Count - shiftKey).ToList();
             upperCipherlist.AddRange(upperAlphabetList.GetRange(0, shiftKey));
             cipherList.AddRange(upperCipherlist);
 
-            lowerAlphabetList.AddRange(upperAlphabetList);
 
-            var fullAlphabetlist = lowerAlphabetList;
-
-
-            var returnText = new string(CipherText(text, fullAlphabetlist, cipherList).ToArray());
-
-
-            return returnText;
+            return new string(CipherText(text, fullAlphabetlist, cipherList).ToArray());
         }
 
         public  static IEnumerable<char> CipherText(string text, List<char> alphabetList, List<char> cipherList)
@@ -40,6 +35,7 @@
                 if (index >= 0)
                 {
                     yield return cipherList[index];
+
                 }
                 else
                 {
