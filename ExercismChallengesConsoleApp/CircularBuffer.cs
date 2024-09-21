@@ -8,7 +8,7 @@
         public T[] buffer;
         public CircularBuffer(int capacity)
         {
-            buffer = new T[capacity];
+            buffer = new T[];
             readIndex = 0;
             writeIndex = 0;
         }
@@ -19,7 +19,6 @@
                 throw new InvalidOperationException();
             
             T result = buffer[readIndex];
-
             if (readIndex == buffer.Length - 1)
             {
                 readIndex = 0;  
@@ -37,17 +36,26 @@
             if(writeIndex == buffer.Length)
                 throw new InvalidOperationException();
 
-                buffer[writeIndex++] = value;
+            if(writeIndex < buffer.Count -1)
+            {
+                writeIndex++;
+                buffer[writeIndex] = value;
+            }
+            else
+            {
+                writeIndex = 0;
+            }
         }
 
         public void Overwrite(T value)
         {
-            throw new NotImplementedException("You need to implement this method.");
+            buffer[readIndex] = value;
+            readIndex++;
         }
 
         public void Clear()
         {
-            throw new NotImplementedException("You need to implement this method.");
+            buffer = new List<T>();
         }
     }
 }
