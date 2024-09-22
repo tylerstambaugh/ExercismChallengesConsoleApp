@@ -1,61 +1,50 @@
-﻿namespace ExercismChallengesConsoleApp
+﻿using System.Globalization;
+
+namespace ExercismChallengesConsoleApp
 {
     public class CircularBuffer<T>
     {
+        T[] buffer;
 
-        public int readIndex;
-        public int writeIndex;
-        public T[] buffer;
-        public CircularBuffer(int capacity)
-        {
-            buffer = new T[];
-            readIndex = 0;
-            writeIndex = 0;
-        }
+        int readIndex = 0;
+        int writeIndex = 0;
+        public CircularBuffer(int capacity) => buffer = new T[capacity];
+        
 
         public T Read()
         {
-            if(writeIndex == 0)            
-                throw new InvalidOperationException();
-            
-            T result = buffer[readIndex];
-            if (readIndex == buffer.Length - 1)
-            {
-                readIndex = 0;  
-            }
-            else
-            {
-                readIndex++;
-            }
-            
-            return result;
+            if(IsEmpty)
+                throw new InvalidOperationException("Cannot read from empty buffer");
+            return buffer[Wrap(readIndex++)];
         }
 
         public void Write(T value)
         {
-            if(writeIndex == buffer.Length)
-                throw new InvalidOperationException();
+            if (IsFull)
+                throw new InvalidOperationException("Cannot write to full buffer");
 
-            if(writeIndex < buffer.Count -1)
-            {
-                writeIndex++;
-                buffer[writeIndex] = value;
-            }
-            else
-            {
-                writeIndex = 0;
-            }
+            buffer[Wrap(writeIndex++)] = value;
         }
 
         public void Overwrite(T value)
         {
-            buffer[readIndex] = value;
-            readIndex++;
+            if (IsFull)
+                readIndex++;
+            Write(value);
         }
 
         public void Clear()
         {
-            buffer = new List<T>();
+            writeIndex = readIndex;
         }
+
+        private int Length => writeIndex - readIndex;
+
+        public bool IsEmpty => readIndex == writeIndex;
+
+        public bool IsFull => buffer.Length == Length;
+
+        private int Wrap(int n) => n % buffer.Length;
+
     }
 }
